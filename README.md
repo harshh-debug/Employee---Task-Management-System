@@ -92,17 +92,10 @@ The CSV uses the same query builder as the task list, reads all matching records
 
 ## Deployment
 
-Configuration is prepared for separate hosts:
+The application is deployed as separate frontend and backend services:
 
-1. A transaction-capable MongoDB Atlas cluster URI was supplied for this project. The `roots_employee_tasks` database and its `employees` and `tasks` collections were created and indexed through the local API connection. The ignored `server/.env` points to this database; copy the URI into the backend host secret `MONGODB_URI` when deploying, and do not commit it.
-2. Push the repository to a Git host. Create a Render Blueprint from its root `render.yaml`. Supply `MONGODB_URI` and the eventual Netlify origin as `CLIENT_ORIGIN`. Render uses `PORT` and health-checks `/api/health`. Verify the real health URL returns 200.
-3. Create a Netlify site from the same repository root. Root `netlify.toml` builds `client/`, publishes `client/dist`, and rewrites nested client routes to `index.html`. Set `VITE_API_BASE_URL` to the verified Render URL plus `/api` in Netlify's build environment; rebuild.
-4. Set `CLIENT_ORIGIN` on Render to the actual Netlify origin and redeploy/restart. Verify the frontend, a direct nested route refresh, create employee/task, rule rejection, dashboard and filtered CSV against the production database.
+- **Frontend:** [https://roots-employee-tasks.netlify.app](https://roots-employee-tasks.netlify.app)
+- **Backend API:** [https://employee-task-management-system-hmm2.onrender.com](https://employee-task-management-system-hmm2.onrender.com)
+- **Backend health:** [https://employee-task-management-system-hmm2.onrender.com/api/health](https://employee-task-management-system-hmm2.onrender.com/api/health)
 
-These provider configuration keys follow the current [Render Blueprint reference](https://render.com/docs/blueprint-spec) and [Netlify build](https://docs.netlify.com/build/configure-builds/overview/) and [SPA rewrite](https://docs.netlify.com/resources/troubleshooting/page-not-found-error-guide/) guidance. Deployment is **not complete** in this workspace because Netlify and Render access are not available. The Atlas database is provisioned and the local API was smoke-tested against it. No frontend or backend URL is claimed as live.
-
-## Verification and submission
-
-On 24 October 2026, 15 local replica-set integration tests, type checks, lint and production builds passed. Browser checks created and edited employees and tasks, exercised status changes and a blocked delete notification, confirmed API-backed lists and dashboard, restored filtered URLs through browser history, and inspected desktop, tablet and 390px mobile layouts. The local health endpoint returned 200 against the project Atlas database; an API smoke test created, read and removed a temporary employee, leaving both project collections empty. Live deployment checks remain open.
-
-The source ZIP is named `Harsh_Joshi.zip`. It excludes real `.env` files, dependencies, Git data, logs, caches and build outputs. The original assignment PDF and context documents remain in the source for review.
+Netlify builds the client workspace from the repository root, publishes `client/dist`, and rewrites nested SPA routes to `index.html` using `netlify.toml`. Its `VITE_API_BASE_URL` is set to `https://employee-task-management-system-hmm2.onrender.com/api`. Render runs the Express API as a Web Service, uses its assigned `PORT`, and health-checks `/api/health`. The Render environment contains `NODE_ENV`, `MONGODB_URI`, and `CLIENT_ORIGIN`; the MongoDB URI is never committed or exposed to the browser. The production database is `roots_employee_tasks`.
