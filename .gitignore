@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Harsh_Joshi.zip
+*.tsbuildinfo
+# Assignment starter and internal planning files
+/AGENTS.md
+/STARTER_PROMPT.md
+/ASSIGNMENT.md
+/ACCEPTANCE_CHECKLIST.md
+/IMPLEMENTATION_PLAN.md
+/Roots_MERN_Intern_Assignment.pdf

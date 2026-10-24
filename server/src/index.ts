@@ -1,0 +1,10 @@
+import mongoose from 'mongoose';
+import {config} from './config.js';
+import {createApp} from './app.js';
+import './models.js';
+const {uri,port,origin}=config();
+await mongoose.connect(uri);
+const hello=await mongoose.connection.db!.admin().command({hello:1});
+if(!hello.setName)throw new Error('MongoDB replica set required for transactional writes.');
+const server=createApp(origin).listen(port,()=>console.log('API listening on '+port));
+process.on('SIGTERM',()=>{server.close();void mongoose.disconnect();});
